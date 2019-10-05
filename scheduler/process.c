@@ -2,25 +2,25 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
-#include "queue.h"
-#include "maxheap.h"
-#include "minheap.h"
+#include "queue.h"             // User defined header files
+#include "maxheap.h"           // queue, maxheap, minheap
+#include "minheap.h"           // and process
 #include "process.h"
 
 /********* GLOBAL VARIABLES *********/
-int        cur_time = 0, wait_t = 0;
+int        cur_time = 0, wait_t = 0;   // Current time and Total wait time
 
 /********* MAIN STARTS HERE *********/
 int main(int argc, char **argv)
 {
    int        i, max_h = 0, min_h = 0, opt = 5;
    char       check, line[MAX], *fname = NULL;
-   bool       idle = false;
-   double      avg;
+   bool       idle = false;      // To check process status
+   double     avg;
    FILE       *fp = NULL;
-   Queue      q;
-   Maxheap    maxheap[MAX];
-   Minheap    minheap[MAX];
+   Queue      q;                 // Ready Queue
+   Maxheap    maxheap[MAX];      // Raedy Queue for HRRN
+   Minheap    minheap[MAX];      // Ready Queue for SJN
 
    if (argc != 2)
    {

@@ -19,7 +19,7 @@ typedef struct PCB
 } pcb;
 
 /********* GLOBAL VARIABLES *********/
-pcb        proc[MAX], cpu;
+pcb        proc[MAX], cpu;              // Process Control Block
 
 /********* FUNCTION DECLARATION *********/
 int menu();

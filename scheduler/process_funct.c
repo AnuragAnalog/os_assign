@@ -7,11 +7,11 @@
 #include "minheap.h"
 #include "process.h"
 
-/********* REFERENCE TO GLOBAL VARIABLES *********/
-extern int cur_time, wait_t;
+/********* REFERENCING GLOBAL VARIABLES *********/
+extern int     cur_time, wait_t;
 
 /********* FUNCTION DEFINITION *********/
-void reset_cpu()
+void reset_cpu()                      // Idle cpu
 {
    cpu.pid = -1;
    cpu.arrival = -1;
@@ -48,7 +48,7 @@ void load_process(int index, int param)
    return ;
 }
 
-void update_pcb1(Queue *q)
+void update_pcb1(Queue *q)                  // Only for FCFS, RR
 {
    int      i;
 
@@ -63,7 +63,7 @@ void update_pcb1(Queue *q)
    return ;
 }
 
-void update_pcb2(Minheap heap[], int len)
+void update_pcb2(Minheap heap[], int len)  // Only for SJN
 {
    int        i;
 
@@ -78,7 +78,7 @@ void update_pcb2(Minheap heap[], int len)
    return ;
 }
 
-void update_pcb3(Maxheap heap[], int len)
+void update_pcb3(Maxheap heap[], int len)  // Only for HRRN
 {
    int        i;
    
@@ -93,7 +93,7 @@ void update_pcb3(Maxheap heap[], int len)
    return ;
 }
 
-void put_proc_inq(Queue *q)
+void put_proc_inq(Queue *q)                   // Only for FCFS, RR
 {
    int        i;
 
@@ -108,7 +108,7 @@ void put_proc_inq(Queue *q)
    return ;
 }
 
-int put_proc_in_maxheap(Maxheap maxheap[], int len)
+int put_proc_in_maxheap(Maxheap maxheap[], int len) // Only for HRRN
 {
     int        i;
     double     ratio, num, den;
@@ -127,7 +127,7 @@ int put_proc_in_maxheap(Maxheap maxheap[], int len)
     return len;
 }
 
-int put_proc_in_minheap(Minheap minheap[], int len)
+int put_proc_in_minheap(Minheap minheap[], int len)  // Only for SJN
 {
     int        i;
 
@@ -142,7 +142,7 @@ int put_proc_in_minheap(Minheap minheap[], int len)
     return len;
 }
 
-void print_status(int param)
+void print_status(int param)                // Print cpu status
 {
    printf("Current time is-> %d\n", cur_time);
    printf("Running process details\n");
@@ -206,7 +206,6 @@ void run_fcfs(Queue *q, bool idle)
       if (idle)
          break;
       print_status(FCFS);
-      //sleep(1);
       if (!isempty(q))
          update_pcb1(q);
       cur_time = cur_time + 1;
@@ -225,7 +224,6 @@ void run_sjf(Minheap minheap[], int min_h)
       if (min_h == 0 && cpu.pid == -1)
          break;
       print_status(SJF);
-      //sleep(1);
       if (min_h != 0)
          update_pcb2(minheap, min_h);
       cur_time = cur_time + 1;
@@ -244,7 +242,6 @@ void run_round_robin(Queue *q, bool idle)
       if (idle)
          break;
       print_status(RR);
-      //sleep(1);
       if (!isempty(q))
          update_pcb1(q);
       cur_time = cur_time + 1;
@@ -263,7 +260,6 @@ void run_hrrn(Maxheap maxheap[], int max_h)
       if (max_h == 0 && cpu.pid == -1)
          break;
       print_status(HRRN);
-      //sleep(1);
       if (max_h != 0)
          update_pcb3(maxheap, max_h);
       cur_time = cur_time + 1;
@@ -442,33 +438,6 @@ int hrrn(Maxheap heap[], int len)
          reset_cpu();
          len = hrrn(heap, len);
       }
-      /*else
-      {
-         if (len != 0)
-         {
-            pid1 = max_delete(heap, len);
-            len = len - 1;
-            pid2 = cpu.pid;
-            rem = cpu.remaining;
-            for (i = 0; i < MAX; i++)
-            {
-                if (pid1 == proc[i].pid)
-                {
-                   load_process(i, HRRN);
-                   break;
-                }
-            }
-            for (i = 0; i < MAX; i++)
-            {
-               if (pid2 == proc[i].pid)
-               {
-                  len = max_insert(heap, len, proc[i].pid, 1+proc[i].wait/proc[i].time);
-                  proc[i].remaining = rem;
-                  break;
-               }
-            }
-         }
-      }*/
    }
 
    return len;
