@@ -3,6 +3,8 @@
 #define   SJF          1
 #define   RR           2
 #define   HRRN         3
+#define   NONPREMPTIVE 4
+#define   PREMPTIVE    5
 #define   MAX          20
 #define   INFINITY     true
 
@@ -32,7 +34,7 @@ void update_pcb3(Maxheap heap[], int len);
 void run_fcfs(Queue *q, bool idle);
 void run_sjf(Minheap minheap[], int min_h);
 void run_round_robin(Queue *q, bool idle);
-void run_hrrn(Maxheap maxheap[], int max_h);
+void run_hrrn(Maxheap maxheap[], int max_h, int param);
 void load_process(int index, int param);
 int update_response_ratio(Maxheap heap[], int len);
 int put_proc_in_maxheap(Maxheap maxheap[], int len);
@@ -41,3 +43,4 @@ bool fcfs(Queue *q);
 int sjf(Minheap heap[], int len);
 bool round_robin(Queue *q);
 int hrrn(Maxheap heap[], int len);
+int hrrn_premptive(Maxheap heap[], int len);

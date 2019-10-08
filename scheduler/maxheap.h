@@ -13,7 +13,7 @@ int max_menu();
 int max_left_child(int k);
 int max_right_child(int k);
 int max_parent(int k);
-int max_insert(Maxheap heap[], int len, int key, int value);
+int max_insert(Maxheap heap[], int len, int key, double value);
 int max_delete(Maxheap heap[], int len);
 void max_heapify_up(Maxheap heap[], int len);
 void max_heapify_down(Maxheap heap[], int len, int len1);

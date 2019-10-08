@@ -110,36 +110,36 @@ void put_proc_inq(Queue *q)                   // Only for FCFS, RR
 
 int put_proc_in_maxheap(Maxheap maxheap[], int len) // Only for HRRN
 {
-    int        i;
-    double     ratio, num, den;
+   int        i;
+   double     ratio, num, den;
 
-    for (i = 0; i < MAX; i++)
-    {
-       if (proc[i].arrival == cur_time)
-       {
-          num = (double) proc[i].wait;
-          den = (double) proc[i].time;
-          ratio = num/den + (double) 1;
-          len = max_insert(maxheap, len, proc[i].pid, ratio);
-       }
-    }
+   for (i = 0; i < MAX; i++)
+   {
+      if (proc[i].arrival == cur_time)
+      {
+         num = (double) proc[i].wait;
+         den = (double) proc[i].time;
+         ratio = num/den + (double) 1;
+         len = max_insert(maxheap, len, proc[i].pid, ratio);
+      }
+   }
 
-    return len;
+   return len;
 }
 
 int put_proc_in_minheap(Minheap minheap[], int len)  // Only for SJN
 {
-    int        i;
+   int        i;
 
-    for (i = 0; i < MAX; i++)
-    {
-       if (proc[i].arrival == cur_time)
-       {
-          len = min_insert(minheap, len, proc[i].pid, proc[i].time);
-       }
-    }
+   for (i = 0; i < MAX; i++)
+   {
+      if (proc[i].arrival == cur_time)
+      {
+         len = min_insert(minheap, len, proc[i].pid, proc[i].time);
+      }
+   }
 
-    return len;
+   return len;
 }
 
 void print_status(int param)                // Print cpu status
@@ -251,12 +251,20 @@ void run_round_robin(Queue *q, bool idle)
    return ;
 }
 
-void run_hrrn(Maxheap maxheap[], int max_h)
+void run_hrrn(Maxheap maxheap[], int max_h, int param)
 {
    while (INFINITY)
    {
       max_h = put_proc_in_maxheap(maxheap, max_h);
-      max_h = hrrn(maxheap, max_h);
+      if (param == 4)
+      {
+         max_h = hrrn(maxheap, max_h);
+      }
+      else if (param == 5)
+      {
+         max_h = hrrn_premptive(maxheap, max_h);
+      }
+      
       if (max_h == 0 && cpu.pid == -1)
          break;
       print_status(HRRN);
@@ -443,19 +451,86 @@ int hrrn(Maxheap heap[], int len)
    return len;
 }
 
+int hrrn_premptive(Maxheap heap[], int len)
+{
+   int        i, pid1, pid2, rem, num, den;
+   double     ratio;
+
+   if (cpu.pid == -1)
+   {
+      if (len == 0)
+      {
+         printf("There are no more processes in the Queue\n");
+         return 0;
+      }
+      else
+      {
+         len = update_response_ratio(heap, len);
+         pid1 = max_delete(heap, len);
+         len = len - 1;
+         for (i = 0; i < MAX; i++)
+         {
+             if (pid1 == proc[i].pid)
+             {
+                load_process(i, HRRN);
+                break;
+             }
+         }
+      }
+   }
+   else
+   {
+      if (cpu.remaining == 0)
+      {
+         reset_cpu();
+         len = hrrn_premptive(heap, len);
+      }
+      else
+      {
+         pid2 = cpu.pid;
+         for (i = 0; i < MAX; i++)
+         {
+            if (pid2 == proc[i].pid)
+            {
+               proc[i].remaining = proc[i].remaining - 1;
+               num = (double) proc[i].wait;
+               den = (double) proc[i].time;
+               ratio = num/den + (double) 1;
+               len = max_insert(heap, len, proc[i].pid, ratio);
+            }
+         }
+
+         len = update_response_ratio(heap, len);
+         pid1 = max_delete(heap, len);
+         len = len - 1;
+         for (i = 0; i < MAX; i++)
+         {
+            if (pid1 == proc[i].pid)
+            {
+               load_process(i, HRRN);
+               break;
+            }
+         }
+      }
+   }
+
+   return len;
+}
+
 int menu()
 {
    int       option;
 
-   printf("\n----------------------------\n");
-   printf("          Scheduler           \n");
-   printf("----------------------------  \n");
+   printf("\n--------------------------------------\n");
+   printf("                Scheduler               \n");
+   printf("--------------------------------------  \n");
    printf("Algorithms which I implement: \n");
    printf("1) First Come First Serve(FCFS)\n");
    printf("2) Shortest Job First(SJF)\n");
    printf("3) Round Robin(RR)\n");
-   printf("4) Highest Response Ratio Next(HRRN)\n");
-   printf("5) Exit\n");
+   printf("4) Highest Response Ratio Next(HRRN) NON-PREMPTIVE\n");
+   printf("5) Highest Response Ratio Next(HRRN) PREMPTIVE\n");
+   printf("6) Exit\n");
 
    printf("Enter your choice: ");
    scanf("%d", &option);

@@ -43,7 +43,7 @@
 }*/
 
 /********* FUNCTION DEFINITION *********/
-int max_insert(Maxheap heap[], int len, int key, int value)
+int max_insert(Maxheap heap[], int len, int key, double value)
 {
    heap[len].key = key;
    heap[len].value = value;

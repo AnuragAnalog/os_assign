@@ -13,7 +13,7 @@ int        cur_time = 0, wait_t = 0;   // Current time and Total wait time
 /********* MAIN STARTS HERE *********/
 int main(int argc, char **argv)
 {
-   int        i, max_h = 0, min_h = 0, opt = 5;
+   int        i, max_h = 0, min_h = 0, opt = 6;
    char       check, line[MAX], *fname = NULL;
    bool       idle = false;      // To check process status
    double     avg;
@@ -72,9 +72,12 @@ int main(int argc, char **argv)
             run_round_robin(&q, idle);
             break;
       case 4:
-            run_hrrn(maxheap, max_h);
+            run_hrrn(maxheap, max_h, NONPREMPTIVE);
             break;
       case 5:
+            run_hrrn(maxheap, max_h, PREMPTIVE);
+            break;
+      case 6:
             printf("See you soon :-)\n");
             exit(0);
    }
