@@ -34,7 +34,7 @@ void load_process(int index, int param)
    cpu.remaining = proc[index].remaining;
    cpu.wait = proc[index].wait;
 
-   if (param == 0 || param == 1)
+   if (1)
    {
        cpu.end = cpu.start + cpu.time;
        proc[index].end = cpu.end;
@@ -149,7 +149,7 @@ void print_status(int param)                // Print cpu status
    printf("PID: %d ", cpu.pid);
    printf("Arrival time: %d ", cpu.arrival);
    printf("Execution time: %d ", cpu.time);
-   if (param == 0 || param == 1)
+   if (1)
    {
       printf("Start time: %d ", cpu.start);
       printf("End time: %d\n", cpu.end);
@@ -277,6 +277,31 @@ void run_hrrn(Maxheap maxheap[], int max_h, int param)
    return ;
 }
 
+void run_randomized(Queue *q, bool idle, int param)
+{
+   while (INFINITY)
+   {
+      put_proc_inq(q);
+      if (param == 4)
+      {
+         idle = randomized(q);
+      }
+      else if (param == 5)
+      {
+         idle = randomized_premptive(q);
+      }
+      if (idle)
+         break;
+      print_status(FCFS);
+      if (!isempty(q))
+         update_pcb1(q);
+      cur_time = cur_time + 1;
+      cpu.remaining = cpu.remaining - 1;
+   }
+
+   return ;
+}
+
 bool fcfs(Queue *q)
 {
    int        i, pid, check = false;
@@ -293,11 +318,11 @@ bool fcfs(Queue *q)
          pid = delete(q);
          for (i = 0; i < MAX; i++)
          {
-             if (pid == proc[i].pid)
-             {
-                load_process(i, FCFS);
-                break;
-             }
+            if (pid == proc[i].pid)
+            {
+               load_process(i, FCFS);
+               break;
+            }
          }
       }
    }
@@ -330,11 +355,11 @@ int sjf(Minheap heap[], int len)
          len = len - 1;
          for (i = 0; i < MAX; i++)
          {
-             if (pid == proc[i].pid)
-             {  
-                load_process(i, SJF);
-                break;
-             }
+            if (pid == proc[i].pid)
+            {  
+               load_process(i, SJF);
+               break;
+            }
          }
       }
    }
@@ -367,11 +392,11 @@ bool round_robin(Queue *q)
          pid1 = delete(q);
          for (i = 0; i < MAX; i++)
          {
-             if (pid1 == proc[i].pid)
-             {
-                load_process(i, RR);
-                break;
-             }
+            if (pid1 == proc[i].pid)
+            {
+               load_process(i, RR);
+               break;
+            }
          }
       }
    }
@@ -431,11 +456,11 @@ int hrrn(Maxheap heap[], int len)
          len = len - 1;
          for (i = 0; i < MAX; i++)
          {
-             if (pid1 == proc[i].pid)
-             {
-                load_process(i, HRRN);
-                break;
-             }
+            if (pid1 == proc[i].pid)
+            {
+               load_process(i, HRRN);
+               break;
+            }
          }
       }
    }
@@ -517,6 +542,104 @@ int hrrn_premptive(Maxheap heap[], int len)
    return len;
 }
 
+bool randomized(Queue *q)
+{
+   int        i, pid;
+   bool       check = false;
+
+   if (cpu.pid == -1)
+   {
+      if (isempty(q))
+      {
+         printf("There are no more processes in the Queue\n");
+         return true;
+      }
+      else
+      {
+         shuffle_the_q(q);
+         pid = delete(q);
+         for (i = 0; i < MAX; i++)
+         {
+            if (pid == proc[i].pid)
+            {
+               load_process(i, RR);
+               break;
+            }
+         }
+      }
+   }
+   else
+   {
+      if (cpu.end == cur_time)
+      {
+         reset_cpu();
+         check = randomized(q);
+      }
+   }
+
+   return check;
+}
+
+bool randomized_premptive(Queue *q)
+{
+   int        i, pid1, pid2;
+   bool       check = false;
+
+   if (cpu.pid == -1)
+   {
+      if (isempty(q))
+      {
+         printf("There are no more processes in the Queue\n");
+         return true;
+      }
+      else
+      {
+         shuffle_the_q(q);
+         pid1 = delete(q);
+         for (i = 0; i < MAX; i++)
+         {
+            if (pid1 == proc[i].pid)
+            {
+               load_process(i, RR);
+               break;
+            }
+         }
+      }
+   }
+   else
+   {
+      if (cpu.remaining == 0)
+      {
+         reset_cpu();
+         check = randomized(q);
+      }
+      else
+      {
+         pid2 = cpu.pid;
+         shuffle_the_q(q);
+         pid1 = delete(q);
+         for (i = 0; i < MAX; i++)
+         {
+            if (pid1 == proc[i].pid)
+            {
+               load_process(i, RR);
+               break;
+            }
+         }
+         for (i = 0; i < MAX; i++)
+         {
+            if (pid2 == proc[i].pid)
+            {
+               proc[i].remaining = proc[i].remaining - 1;
+            }
+         }
+         insert(q, pid2);
+      }
+   }
+
+   return check;
+}
+
 int menu()
 {
    int       option;
@@ -530,7 +653,9 @@ int menu()
    printf("3) Round Robin(RR)\n");
    printf("4) Highest Response Ratio Next(HRRN) NON-PREMPTIVE\n");
    printf("5) Highest Response Ratio Next(HRRN) PREMPTIVE\n");
-   printf("6) Exit\n");
+   printf("6) Randomized Scheduling NON-PREMPTIVE\n");
+   printf("7) Randomized Scheduling PREMPTIVE\n");
+   printf("8) Exit\n");
 
    printf("Enter your choice: ");
    scanf("%d", &option);

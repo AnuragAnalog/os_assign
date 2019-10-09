@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 #include "queue.h"
 
 /********* MAIN STARTS HERE *********/
@@ -125,4 +126,31 @@ bool is_member(Queue *q, int value)
    }
 
    return false;
+}
+
+void shuffle_the_q(Queue *q)
+{
+   int        i, j;
+   time_t     seed;
+
+   srand((unsigned) seed);
+
+   for (i = q->rear; i > q->front; i--)
+   {
+      j = rand() % i;
+      swap(&q->items[i], &q->items[j]);
+   }
+
+   return ;
+}
+
+void swap(int *a, int *b)
+{
+   int        tmp;
+
+   tmp = *a;
+   *a = *b;
+   *b = tmp;
+
+   return ;
 }

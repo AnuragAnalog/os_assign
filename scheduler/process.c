@@ -13,7 +13,7 @@ int        cur_time = 0, wait_t = 0;   // Current time and Total wait time
 /********* MAIN STARTS HERE *********/
 int main(int argc, char **argv)
 {
-   int        i, max_h = 0, min_h = 0, opt = 6;
+   int        i, max_h = 0, min_h = 0, opt = 8;
    char       check, line[MAX], *fname = NULL;
    bool       idle = false;      // To check process status
    double     avg;
@@ -78,6 +78,12 @@ int main(int argc, char **argv)
             run_hrrn(maxheap, max_h, PREMPTIVE);
             break;
       case 6:
+            run_randomized(&q, idle, NONPREMPTIVE);
+            break;
+      case 7:
+            run_randomized(&q, idle, PREMPTIVE);
+            break;
+      case 8:
             printf("See you soon :-)\n");
             exit(0);
    }
