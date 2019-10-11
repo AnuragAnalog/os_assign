@@ -38,20 +38,21 @@ Write the following programs:
     3. Generate 0.9 * L (round to the nearest integer) random numbers according to a Normal Distribution with mean C * 4096 + 2048 and standard deviation 500 * (S+1)
     4. Update C by generating it again as a random number less than M
     5. Generate 0.1 * L (round to the nearest integer) random numbers according to a uniform distribution between 0 and C.
-    6. Repeat steps 2 - 5, M times.
+    6. Repeat steps (2 - 5), M times.
     7. Write all the random numbers into the output file filename
     Return value is the number of address strings written into outfile.
      
 * **Memory Mapper:** int mem_mapper (FILE *infile, FILE *outfile, int pid)
-    Modify the memory manager function from the previous lab and rename it as above. It now does the following:
     1. Generate a random number A uniformly between 512 and 4096.
-    2. Read A address references from infile.
-    3. For each address reference, find the physical address using the same logic as that from previous lab. Extend the logic to make sure that the page number and the pid both match.
-    4. Write the triplet (logical address, physical address, is_pagefault) into outfile.
-    5. The function returns a negative value if there is no free frame in physical memory to load a page; 0 ("terminated" status) if the entire file of address references is processed; and, a positive value if there are more addresses to be processed.
-
+    2. Read the address reference from filename
+    3. Calculate page number P and offset X
+    4. If P is in memory with it's pid, write the triplet (logical, physical, 0) into outfile
+    5. If P is not in memory, find a free frame E in memory.
+    6. If E is found, then update the memory along with it's pid, calculate physical address; write the triplet (logical, physical, 1) to output file outfile
+    7. Repeat the above steps until all A address references are read.
+    8. The function returns a negative value if there is no free frame in physical memory to load a page; 0 ("terminated" status) if the entire file of address references is processed; and, a positive value if there are more addresses to be processed.
      
-    * **Memory Manager:** This is the main program for the present! It works as follows:
+* **Memory Manager:** This is the main program for the present! It works as follows:
     1. For every PID from 1 ... NP, run process simulator with outfile = AR_pp.dat where pp stands for the PID of the process. If the PID is 1, it should be written into AR_01.dat file.
     2. Open the AR_*.dat files for reading.
     3. For every PID, open a file AR_pp_out.dat for writing the logical, physical addresses and page faults triplets.
