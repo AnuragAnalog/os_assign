@@ -56,3 +56,7 @@ Data shows the arrival times and process lengths for execution.
     | 1017	| 9        |	2   |
     | 1018	| 9        |	3   |
     | 1019	| 9        |	4   |
+
+**Files**
+
+process_details.txt contains the data of this table.
