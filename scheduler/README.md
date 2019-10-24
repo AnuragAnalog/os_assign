@@ -34,7 +34,7 @@ scheduling algorithms. Assume that the scheduler looks at the process tables onc
 
 Data shows the arrival times and process lengths for execution.
 
-    |  PID	| Arr Time | Length |
+    | PID | Arr Time | Length |
     | --- | --- | --- |
     | 1000 | 0 | 4 |
     | 1001 | 0 | 5 |
@@ -52,15 +52,11 @@ Data shows the arrival times and process lengths for execution.
     | 1013 | 7 | 2 |
     | 1014 | 7 | 9 |
     | 1015 | 8 | 2 |
-    | 1016 | 8 | 10|
+    | 1016 | 8 | 10 |
     | 1017 | 9 | 2 |
     | 1018 | 9 | 3 |
     | 1019 | 9 | 4 |
 
-| Command | Description |
-| --- | --- |
-| `git status` | List all *new or modified* files |
-| `git diff` | Show file differences that **haven't been** staged |
 **Files**
 
 process_details.txt contains the data of this table.
