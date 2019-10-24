@@ -57,6 +57,10 @@ Data shows the arrival times and process lengths for execution.
     | 1018 | 9 | 3 |
     | 1019 | 9 | 4 |
 
+| Command | Description |
+| --- | --- |
+| `git status` | List all *new or modified* files |
+| `git diff` | Show file differences that **haven't been** staged |
 **Files**
 
 process_details.txt contains the data of this table.
