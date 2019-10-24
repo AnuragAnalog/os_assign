@@ -34,6 +34,7 @@ scheduling algorithms. Assume that the scheduler looks at the process tables onc
 
 Data shows the arrival times and process lengths for execution.
 
+
     | PID | Arr Time | Length |
     | --- | --- | --- |
     | 1000 | 0 | 4 |
