@@ -8,7 +8,7 @@
 #include "memory_management.h"
 
 /********* GLOBAL VARIABLES *********/
-int           ind = 0, np = 0;
+int           ff_global = -1, ind = 0, np = 0, pg_replace = 4;
 
 /********* MAIN STARTS HERE *********/
 int main(int argc, char **argv)
@@ -17,14 +17,15 @@ int main(int argc, char **argv)
    char       infile[FNAME] = "AR_\0", outfile[FNAME] = "AR_\0", check;
    FILE       *ifp = NULL, *ofp = NULL;
 
-   if (argc != 3)
+   if (argc != 4)
    {
-      fprintf(stderr, "Syntax: %s <NP> <filename>\n", argv[0]);
+      fprintf(stderr, "Syntax: %s <NP> <filename> <Pg-replacement>\n", argv[0]);
       exit(1);
    }
 
    np = atoi(argv[1]);
    ifp = fopen(argv[2], "r");
+   pg_replace = atoi(argv[3]);
    if (ifp == NULL)
    {
       fprintf(stderr, "Sorry the requested file(%s) doesn't exist, or", argv[2]);
@@ -45,11 +46,11 @@ int main(int argc, char **argv)
    {
       fscanf(ifp, "%d %d", &m, &s);
       make_process(pid, m, s);
-   }
 
-   for (i = 0; i < np; i++)
-   {
-      file_desp[i] = NULL;
+      page_pid[pid-1].pg_fault = 0;
+      page_pid[pid-1].pg_replacement = 0;
+      ff_local[pid-1].firstframe = -1;
+      file_desp[pid-1] = NULL;
    }
 
    for (i = 0; i < MAXFRAMES; i++)
@@ -57,6 +58,8 @@ int main(int argc, char **argv)
       phy_mem[i].pgnum = -1;
    }
 
+   printf("Randomly initialized Process Queue\n");
+   display(&proc_queue);
    while (!isempty(&proc_queue))
    {
       cur_pid = delete(&proc_queue);
@@ -70,12 +73,7 @@ int main(int argc, char **argv)
       status = mem_mapper(file_desp[cur_pid-1], ofp, cur_pid);
       fclose(ofp);
 
-      if (status == MEMFULL)
-      {
-         printf("Memory not available\n");
-         exit(4);
-      }
-      else if (status == TERMINATED)
+      if (status == TERMINATED)
       {
          printf("Process %d completed; removing from queue;\n", cur_pid);
          fclose(file_desp[cur_pid-1]);
@@ -88,5 +86,9 @@ int main(int argc, char **argv)
 
    printf("\nFinal Frame-Table\n");
    display_frametable();
+   printf("\nPage-Fault table\n");
+   display_page_flt_table();
+   printf("\nFinal Slow-down table\n");
+   calc_display_slowdown_rate();
    exit(0);
 }
