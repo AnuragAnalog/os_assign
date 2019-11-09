@@ -65,3 +65,6 @@ Write the following programs:
     8. Repeat the last three steps (5 - 7) until proc_queue is empty.
     9. Print phys_mem data structure to see the current page to frame mapping of each process,
 
+* **Page replacement:** 
+    * int page_fifo_global() which selects the page which is oldest, irrespective of the process to which it belongs to.
+    * int page_fifo_local(struct first_frame[]) selects the page which is oldest and only from the pages which the process owns.
