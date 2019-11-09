@@ -4,7 +4,7 @@
 #define   MAXCHAR         20
 #define   PG_REPLACE_TIME 100
 #define   LLIMIT          512
-#define   MAXFRAMES       1024
+#define   MAXFRAMES       80
 #define   ULIMIT          4096
 #define   PAGESIZE        4096
 #define   TERMINATED      0
@@ -43,12 +43,12 @@ typedef struct SLOWDOWN
 } delay;
 
 /********* GLOBAL VARIABLES *********/
-FILE          *file_desp[MAXFRAMES];
-Queue         proc_queue;
-memory        phy_mem[MAXFRAMES];
-firstframe    ff_local[MAXFRAMES];
-pg_reference  page_pid[MAXFRAMES];
-delay         slowdown[MAXFRAMES];
+FILE            *file_desp[MAXFRAMES];
+Queue           proc_queue;
+memory          phy_mem[MAXFRAMES];
+firstframe      ff_local[MAXFRAMES];
+pg_reference    page_pid[MAXFRAMES];
+delay           slowdown[MAXFRAMES];
 
 /********* FUNCTION DECLARATION *********/
 void swap(int *a, int *b);

@@ -8,7 +8,7 @@
 #include "memory_management.h"
 
 /********* REFERENCEING GLOBAL VARIABLES *********/
-extern int           ff_global, ind, np, pg_replace;
+extern int           ind, np, pg_replace;
 
 /********* FUNCTION DEFINITION *********/
 void initialize_ready_q(int np)
@@ -215,51 +215,6 @@ bool in_memory(int pid, int index, int addr, FILE *ofp)
    return true;
 }
 
-int page_fifo_global()
-{
-   ff_global = (ff_global + 1) % MAXFRAMES;
-
-   return ff_global;
-}
-
-int page_fifo_local(int pid)
-{
-   int        i, frame_no = -1;
-
-   if (ff_local[pid-1].first)
-   {
-      frame_no = ff_local[pid-1].firstframe;
-      ff_local[pid-1].first = false;
-   }
-
-   if (ff_local[pid-1].first == false && frame_no == -1)
-   {
-      for (i = 0; i < np; i++)
-      {
-         if (pid-1 == i)
-         {
-            frame_no = ff_local[i].cur_frame;
-         }
-      }
-   }
-
-   for (i = frame_no+1; i < MAXFRAMES; i++)
-   {
-      if (phy_mem[i].pid == pid)
-      {
-         ff_local[pid-1].cur_frame = i;
-         break;
-      }
-   }
-   if (i == MAXFRAMES)
-   {
-      ff_local[pid-1].cur_frame = ff_local[pid-1].firstframe;
-      ff_local[pid-1].first = true;
-   }
-
-   return frame_no;
-}
-
 void calc_display_slowdown_rate()
 {
    int        i, num = 0, den = 0;
@@ -278,7 +233,6 @@ void calc_display_slowdown_rate()
    }
    printf("+-------------------------------------------------------+\n");
    printf("Total Slow down %.2f %c\n", 100 * (double) num/(double) den, 37);
-   printf("Average Slow down %.2f %c\n", 100 * (double) num/((double) den*(double) np), 37);
    return ;
 }
 
