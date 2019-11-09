@@ -5,7 +5,7 @@
 #include "memory_management.h"
 
 /********* REFERENCEING GLOBAL VARIABLES *********/
-extern int        ff_global, np;
+extern int        ff_global, np, ind;
 
 /********* FUNCTION DEFINITION *********/
 int page_fifo_global()
@@ -51,4 +51,25 @@ int page_fifo_local(int pid)
    }
 
    return frame_no;
+}
+
+int least_recently_used_global()
+{
+   int        page;
+
+   page = page_fifo_global();
+   return page;
+}
+
+int most_recently_used_global()
+{
+   return ind;
+}
+
+int least_recently_used_local()
+{
+   int        page;
+
+   page = page_fifo_local();
+   return page;
 }
