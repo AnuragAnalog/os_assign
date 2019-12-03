@@ -47,7 +47,6 @@ int main(int argc, char **argv)
       fscanf(ifp, "%d %d", &m, &s);
       make_process(pid, m, s);
 
-      ru[pid-1].index = 0;
       page_pid[pid-1].pg_fault = 0;
       page_pid[pid-1].pg_replacement = 0;
       ff_local[pid-1].firstframe = -1;

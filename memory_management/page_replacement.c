@@ -70,6 +70,6 @@ int least_recently_used_local()
 {
    int        page;
 
-   page = page_fifo_local();
+   page = page_fifo_local(52);
    return page;
 }

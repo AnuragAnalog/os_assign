@@ -4,7 +4,7 @@
 #define   MAXCHAR         20
 #define   PG_REPLACE_TIME 100
 #define   LLIMIT          512
-#define   MAXFRAMES       80
+#define   MAXFRAMES       64
 #define   ULIMIT          4096
 #define   PAGESIZE        4096
 #define   TERMINATED      0
